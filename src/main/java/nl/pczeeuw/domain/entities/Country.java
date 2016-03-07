@@ -1,5 +1,6 @@
 package nl.pczeeuw.domain.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,6 +12,7 @@ public class Country {
 	@GeneratedValue
 	private long id;
 	
+	@Column(unique=true)
 	private String name;
 	private String capital;
 	private long population;
@@ -35,6 +37,18 @@ public class Country {
 
 	public long getPopulation() {
 		return population;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setCapital(String capital) {
+		this.capital = capital;
+	}
+
+	public void setPopulation(long population) {
+		this.population = population;
 	}
 
 }

@@ -7,5 +7,7 @@ import nl.pczeeuw.domain.entities.Country;
 public interface CountryRepository extends CrudRepository<Country, Long>{
 	
 	public Country findByName (String name);
+	
+	public Country findCountryByCapital (String capital);
 
 }

@@ -9,7 +9,7 @@ import nl.pczeeuw.domain.entities.Country;
 import nl.pczeeuw.domain.repositories.CountryRepository;
 
 @SpringBootApplication
-@ComponentScan(basePackages={"nl.pczeeuw.domain.entities"})
+@ComponentScan(basePackages={"nl.pczeeuw.domain.entities","nl.pczeeuw.ws"})
 public class SoapdbApplication {
 	
 	public static void main(String[] args) {
@@ -21,7 +21,7 @@ public class SoapdbApplication {
 		repo.save(new Country("Spain","Madrid",12345678));
 		
 		System.out.println(repo.findByName("Spain").getName());
-		
+		System.out.println(repo.findCountryByCapital("Madrid").getName());
 		
 		return repo.findByName("Spain").getName();
 	}
