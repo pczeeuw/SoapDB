@@ -1,11 +1,10 @@
 package nl.pczeeuw.ws.endpoints;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.util.Assert;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -14,13 +13,10 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import nl.pczeeuw.common.utils.CountryConverter;
 import nl.pczeeuw.domain.repositories.CountryRepository;
 import nl.pczeeuw.ws.countries.AddCountryToDBRequest;
+import nl.pczeeuw.ws.countries.AllCountriesResponse;
 import nl.pczeeuw.ws.countries.CountryAddedToDbResponse;
 import nl.pczeeuw.ws.countries.CountryByNameRequest;
-import nl.pczeeuw.ws.countries.CountryNameByCapitalRequest;
-import nl.pczeeuw.ws.countries.CountryNameResponse;
-import nl.pczeeuw.ws.countries.CountryPopByNameRequest;
-import nl.pczeeuw.ws.countries.CountryPopResponse;
-import nl.pczeeuw.ws.countries.CountryRespone;
+import nl.pczeeuw.ws.countries.CountryResponse;
 
 @Endpoint
 public class CountryEndpoint {
@@ -36,9 +32,9 @@ public class CountryEndpoint {
 
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "countryByNameRequest")
 	@ResponsePayload
-	public CountryRespone getCountryNameByName(@RequestPayload CountryByNameRequest request) {
+	public CountryResponse getCountryNameByName(@RequestPayload CountryByNameRequest request) {
 
-		CountryRespone response = new CountryRespone();
+		CountryResponse response = new CountryResponse();
 		
 		nl.pczeeuw.domain.entities.Country jpaCountry = countryRepository.findByName(request.getName());
 
@@ -49,35 +45,23 @@ public class CountryEndpoint {
 		return response;
 	}
 
-	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "countryPopByNameRequest")
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "allCountriesRequest")
 	@ResponsePayload
-	public CountryPopResponse getCountryNameByName(@RequestPayload CountryPopByNameRequest request) {
+	public AllCountriesResponse getAllCountries() {
+		AllCountriesResponse allCountriesResponse = new AllCountriesResponse ();
+		List<nl.pczeeuw.domain.entities.Country> allJPACountriesList = countryRepository.findAll();
 		
-		CountryPopResponse response = new CountryPopResponse();
-		response.setPopulation(countryRepository.findByName(request.getName()).getPopulation());
-
-		return response;
+		allCountriesResponse.getCountry().addAll( convertJpaToWsCountries(allJPACountriesList) );
+				
+		return allCountriesResponse;
 	}
-
-	// @PayloadRoot(namespace = NAMESPACE_URI, localPart =
-	// "CountryCapitalByNameRequest")
-	// @ResponsePayload
-	// public CountryCapitalResponse getCountryCapitalByName(@RequestPayload
-	// CountryByNameRequest request) {
-	// CountryCapitalResponse response = new CountryCapitalResponse();
-	// response.setCapital(countryRepository.findByName(request.getName()).getCapital());
-	//
-	// return response;
-	// }
-
-	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "countryNameByCapitalRequest")
-	@ResponsePayload
-	public CountryNameResponse getCountryNameByCapital(@RequestPayload CountryNameByCapitalRequest request) {
-		CountryNameResponse response = new CountryNameResponse();
-
-		response.setName(countryRepository.findCountryByCapital(request.getCapital()).getName());
-
-		return response;
+	
+	private List<nl.pczeeuw.ws.countries.Country> convertJpaToWsCountries (List<nl.pczeeuw.domain.entities.Country> jpaCountries) {
+		List<nl.pczeeuw.ws.countries.Country> wsCountries = new ArrayList<>();
+		for (nl.pczeeuw.domain.entities.Country jpaCountry : jpaCountries) {
+			wsCountries.add(CountryConverter.convertJpaCountryToWsCountry(jpaCountry, new nl.pczeeuw.ws.countries.Country () ));
+		}
+		return wsCountries;
 	}
 
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "addCountryToDBRequest")
@@ -88,8 +72,10 @@ public class CountryEndpoint {
 
 		nl.pczeeuw.ws.countries.Country wsCountry = request.getCountry();
 		
+		//In case this is an update, try to retrieve the country by name from the DB first
 		nl.pczeeuw.domain.entities.Country jpaCountry = countryRepository.findByName(wsCountry.getName());
 		
+		//If the result is null, 
 		if (jpaCountry == null) {
 			jpaCountry = new nl.pczeeuw.domain.entities.Country ();
 		}

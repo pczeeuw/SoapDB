@@ -5,7 +5,7 @@
 	<element name="addCountryToDBRequest">
 		<complexType>
 			<sequence>
-				<element name="country" type="tns:country"/>
+				<element name="country" type="tns:country" />
 			</sequence>
 		</complexType>
 	</element>
@@ -13,69 +13,41 @@
 	<element name="countryByNameRequest">
 		<complexType>
 			<sequence>
-				<element name="name" type="string"/>
-			</sequence>
-		</complexType>
-	</element>
-
-	<element name="countryPopByNameRequest">
-		<complexType>
-			<sequence>
 				<element name="name" type="string" />
 			</sequence>
 		</complexType>
 	</element>
 
-	<element name="countryNameByCapitalRequest">
+	<element name="allCountriesRequest">
+	</element>
+
+	<element name="allCountriesResponse">
 		<complexType>
 			<sequence>
-				<element name="capital" type="string" />
+				<element name="country" type="tns:country" maxOccurs="unbounded"
+					minOccurs="0"></element>
 			</sequence>
 		</complexType>
 	</element>
 
-	<element name="countryNameResponse">
+	<element name="countryResponse">
 		<complexType>
-			<sequence>
-				<element name="name" type="string" />
-			</sequence>
-		</complexType>
-	</element>
-
-	<element name="countryCapitalResponse">
-		<complexType>
-			<sequence>
-				<element name="capital" type="string" />
-			</sequence>
-		</complexType> 
-	</element>
-
-	<element name="countryPopResponse">
-		<complexType>
-			<sequence>
-				<element name="population" type="long" />
-			</sequence>
-		</complexType>
-	</element>
-	
-	<element name="countryRespone">
-			<complexType>
 			<sequence>
 				<element name="country" type="tns:country" />
 			</sequence>
 		</complexType>
 	</element>
-	
+
 	<complexType name="country">
 		<sequence>
 			<element name="name" type="string"></element>
 			<element name="capital" type="string"></element>
 			<element name="population" type="long"></element>
-		</sequence>	
+		</sequence>
 	</complexType>
-	
-		<element name="countryAddedToDbResponse">
-			<complexType>
+
+	<element name="countryAddedToDbResponse">
+		<complexType>
 			<sequence>
 				<element name="success" type="boolean" />
 			</sequence>
