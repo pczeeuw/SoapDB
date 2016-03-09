@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://pczeeuw.nl/ws/countries"
+	xmlns:tns="http://pczeeuw.nl/ws/countries" elementFormDefault="qualified">
+
+	<element name="addCountryToDBRequest">
+		<complexType>
+			<sequence>
+				<element name="country" type="tns:country" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="countryByNameRequest">
+		<complexType>
+			<sequence>
+				<element name="name" type="string" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="allCountriesRequest">
+	</element>
+
+	<element name="allCountriesResponse">
+		<complexType>
+			<sequence>
+				<element name="country" type="tns:country" maxOccurs="unbounded"
+					minOccurs="0"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="countryResponse">
+		<complexType>
+			<sequence>
+				<element name="country" type="tns:country" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<complexType name="country">
+		<sequence>
+			<element name="name" type="string"></element>
+			<element name="capital" type="string"></element>
+			<element name="population" type="long"></element>
+		</sequence>
+	</complexType>
+
+	<element name="countryAddedToDbResponse">
+		<complexType>
+			<sequence>
+				<element name="success" type="boolean" />
+			</sequence>
+		</complexType>
+	</element>
+
+</schema>
